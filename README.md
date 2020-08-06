@@ -13,6 +13,11 @@
 - `make app_debug` Build application and debugger container
 - `make clean` Remove any existing containers and volumes of the application.
 
+## API endpoints
+- `curl http://localhost:18080/users` Return all users
+- `curl http://localhost:18080/users/1` Return the user with ID `1`
+- `curl -H 'Content-type: application/json' http://localhost:18080/users -d '{"name":"new user"}'` Add a new user
+
 ## Testing
 - `make test` Run all tests. Use the TAGS argument to pass specific tags (e.g. `make TAGS=api test`)
 
