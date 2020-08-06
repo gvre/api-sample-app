@@ -1,0 +1,64 @@
+version: "3.1"
+services:
+  db:
+    image: postgres:12-alpine
+    volumes:
+      - pgdata:/pgdata
+    environment:
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${PGDATABASE}
+      - PGDATA=pgdata
+    ports:
+      - "127.0.0.1:${PGPORT}:5432"
+
+  app:
+    build: .
+    volumes:
+      - .:/app
+      - gomodules:/go/pkg/mod
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${APP_PORT}:8080"
+    depends_on:
+      - db
+
+  debug:
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    volumes:
+      - .:/app
+      - gomodules:/go/pkg/mod
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${APP_PORT}:8080"
+      - "127.0.0.1:${APP_DEBUG_PORT}:40000"
+    depends_on:
+      - db
+
+  test:
+    image: golang:1.14-buster # -race flag need glibc (see https://github.com/golang/go/issues/14481)
+    working_dir: /app
+    volumes:
+      - .:/app
+      - gomodules:/go/pkg/mod
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  migrate:
+    build: ./docker/migrate
+    volumes:
+      - ./migrations:/migrations
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+  gomodules:
