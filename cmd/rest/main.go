@@ -95,6 +95,7 @@ func start(srv *http.Server, host, port string) {
 			syscall.SIGTERM,
 			syscall.SIGQUIT,
 		)
+		signal.Ignore(syscall.SIGHUP)
 
 		<-signals
 		if err := srv.Shutdown(context.Background()); err != nil {
