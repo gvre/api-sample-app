@@ -21,6 +21,12 @@
 ## Testing
 - `make test` Run all tests. Use the TAGS argument to pass specific tags (e.g. `make TAGS=api test`)
 
+## Migrations
+All database migrations should be backward compatible, so only the `up` ones are needed.
+The migrations library supports the `down` ones though, in case you want to play with fire :)
+
+See [MIGRATIONS.md](https://github.com/golang-migrate/migrate/blob/master/MIGRATIONS.md) for more details.
+
 ## Architecture
 <pre>┌─────────────┐          ┌─────────────┐          ┌─────────────┐          ┌─────────────┐
 │             ├─────────▶│             │─────────▶│    User     │─────────▶│             │
