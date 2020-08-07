@@ -55,8 +55,8 @@ func TestUsers(t *testing.T) {
 			"GET",
 			"/users/1234567890",
 			nil,
-			http.StatusInternalServerError,
-			"text/plain",
+			http.StatusNotFound,
+			"application/json",
 			nil,
 		},
 
