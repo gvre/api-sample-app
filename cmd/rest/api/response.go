@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/gvre/rest-api-sample-app/app"
+	"github.com/gvre/api-sample-app/app"
 )
 
 // actionKey holds a standard name to be used by the logger.

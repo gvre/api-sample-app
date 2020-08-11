@@ -1,4 +1,4 @@
-module github.com/gvre/rest-api-sample-app
+module github.com/gvre/api-sample-app
 
 go 1.14
 

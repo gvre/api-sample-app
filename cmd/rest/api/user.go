@@ -2,10 +2,11 @@ package api
 
 import (
 	"context"
-	"github.com/gorilla/mux"
 	"net/http"
 
-	"github.com/gvre/rest-api-sample-app/app"
+	"github.com/gorilla/mux"
+
+	"github.com/gvre/api-sample-app/app"
 )
 
 // HandleGetUsers handles the "GET /users" endpoint.

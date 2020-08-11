@@ -11,8 +11,8 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/gvre/rest-api-sample-app/cmd/rest/api"
-	"github.com/gvre/rest-api-sample-app/user"
+	"github.com/gvre/api-sample-app/cmd/rest/api"
+	"github.com/gvre/api-sample-app/user"
 
 	"github.com/DATA-DOG/go-txdb"
 	"github.com/jackc/pgx/v4/pgxpool"

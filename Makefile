@@ -60,4 +60,4 @@ logs: ## Watch the logs of all containers
 .PHONY: clean
 clean:  ## Remove all containers and volumes of the app
 	docker-compose rm --stop --force
-	docker volume rm rest-api-sample-app_pgdata &>/dev/null || exit 0
+	docker volume rm api-sample-app_pgdata &>/dev/null || exit 0

@@ -16,9 +16,9 @@ import (
 	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 
-	"github.com/gvre/rest-api-sample-app/cmd/rest/api"
-	"github.com/gvre/rest-api-sample-app/logger"
-	"github.com/gvre/rest-api-sample-app/user"
+	"github.com/gvre/api-sample-app/cmd/rest/api"
+	"github.com/gvre/api-sample-app/logger"
+	"github.com/gvre/api-sample-app/user"
 )
 
 func main() {

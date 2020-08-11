@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/gvre/rest-api-sample-app/app"
+	"github.com/gvre/api-sample-app/app"
 )
 
 func TestUsers(t *testing.T) {

@@ -1,11 +1,12 @@
 package api
 
 import (
-	"github.com/gorilla/mux"
-	"go.uber.org/zap"
 	"time"
 
-	"github.com/gvre/rest-api-sample-app/user"
+	"github.com/gorilla/mux"
+	"go.uber.org/zap"
+
+	"github.com/gvre/api-sample-app/user"
 )
 
 // handlerDefaultTimeout is the timeout the handlers pass to the inner layers.

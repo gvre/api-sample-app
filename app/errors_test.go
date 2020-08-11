@@ -6,7 +6,7 @@ import (
 	"syscall"
 	"testing"
 
-	"github.com/gvre/rest-api-sample-app/app"
+	"github.com/gvre/api-sample-app/app"
 )
 
 func TestNewErrorFunc(t *testing.T) {

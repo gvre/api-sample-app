@@ -3,7 +3,8 @@ package user
 import (
 	"context"
 	"fmt"
-	"github.com/gvre/rest-api-sample-app/app"
+
+	"github.com/gvre/api-sample-app/app"
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
 )

@@ -5,7 +5,7 @@ import (
 
 	multierror "github.com/hashicorp/go-multierror"
 
-	"github.com/gvre/rest-api-sample-app/app"
+	"github.com/gvre/api-sample-app/app"
 )
 
 // Service wraps the user repository.
