@@ -13,7 +13,7 @@ func (s *Server) CreateRoutes() {
 	).Methods("POST")
 
 	s.Router.Handle(
-		"/users/{id:[0-9]+}",
+		"/users/{id}",
 		s.HandleGetUser(),
 	).Methods("GET")
 }

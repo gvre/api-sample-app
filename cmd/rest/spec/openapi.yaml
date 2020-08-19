@@ -1,0 +1,160 @@
+openapi: 3.0.0
+info:
+  title: REST API Sample Application
+  version: "1.0"
+servers:
+  - url: http://localhost:18080/
+    description: Development Server
+
+paths:
+  "/users":
+    get:
+      responses:
+        "200":
+          description: Users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+              example: |
+                {
+                  "id": 3
+                }
+
+        "400":
+          description: When the provided JSON data is invalid
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Failure"
+              example: |
+                {
+                  "error": {
+                    "message": "Request body contains badly-formed JSON"
+                  }
+                }
+
+        "413":
+          description: When request body is larger than the allowed one
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Failure"
+              example: |
+                {
+                  "error": {
+                    "message": "Request body is too large"
+                  }
+                }
+
+  "/users/{id}":
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+
+      responses:
+        "200":
+          description: User
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/User"
+
+        "400":
+          description: When id is not a valid integer
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Failure"
+              example: |
+                {
+                  "error": {
+                    "message": "Invalid id"
+                  }
+                }
+
+        "404":
+          description: When user does not exist
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Failure"
+              example: |
+                {
+                  "error": {
+                    "message": "User does not exist"
+                  }
+                }
+
+        "422":
+          description: When id is less than 1
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Failure"
+              example: |
+                {
+                  "error": {
+                    "message": "Validation error",
+                    "errors": [
+                      {
+                        "field": "id",
+                        "message": "Field cannot be less than 1"
+                      }
+                    ]
+                  }
+                }
+
+components:
+  schemas:
+    Failure:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "John Doe"

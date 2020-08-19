@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -38,7 +39,7 @@ func (s *Server) HandleGetUser() http.HandlerFunc {
 		id, err := toInt(vars, "id")
 		if err != nil {
 			logger.With("success", false).Error(err)
-			BadRequestError(w, err)
+			BadRequestError(w, errors.New("Invalid id"))
 			return
 		}
 
@@ -77,7 +78,6 @@ func (s *Server) HandleAddUser() http.HandlerFunc {
 			// Let the "Error" function handle it, in order to simplify the logic in controllers.
 			// The http status code we pass to "Error" does not matter when a malformedRequestError is returned,
 			// so pass the "httpStatusIgnore" constant to make that clear to the future reader of this code.
-			// TODO improve this
 			logger.With("success", false).Error(err)
 			Error(w, err, httpStatusIgnore)
 			return

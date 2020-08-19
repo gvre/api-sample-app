@@ -44,7 +44,7 @@ func unmarshalBody(r *http.Request, dst interface{}) error {
 			return &malformedRequestError{status: http.StatusBadRequest, msg: msg, err: err}
 
 		case err.Error() == "http: request body too large":
-			msg := "Request body must not be larger than 1MB"
+			msg := "Request body is too large"
 			return &malformedRequestError{status: http.StatusRequestEntityTooLarge, msg: msg, err: err}
 
 		default:

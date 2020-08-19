@@ -53,6 +53,10 @@ migrate: ## Run "up" database migrations
 	sleep 5
 	docker-compose run migrate sh -c 'migrate -verbose -path=/migrations -database="postgres://@" up'
 
+.PHONY: openapi_validate
+openapi_validate:
+	@docker run -v "${PWD}/cmd/rest/spec/openapi.yaml:/openapi.yaml" --rm p1c2u/openapi-spec-validator /openapi.yaml
+
 .PHONY: logs
 logs: ## Watch the logs of all containers
 	docker-compose logs -f
