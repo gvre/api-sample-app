@@ -20,3 +20,10 @@ func (s *Server) LimitBody(next http.Handler) http.Handler {
 func (s *Server) Compress(next http.Handler) http.Handler {
 	return handlers.CompressHandler(next)
 }
+
+func (s *Server) EnableCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		next.ServeHTTP(w, r)
+	})
+}

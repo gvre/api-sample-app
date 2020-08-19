@@ -59,6 +59,15 @@ services:
     depends_on:
       - db
 
+  openapi_editor:
+    image: swaggerapi/swagger-editor
+    volumes:
+      - ./cmd/rest/spec/openapi.yaml:/tmp/openapi.yaml
+    environment:
+      - SWAGGER_FILE=/tmp/openapi.yaml
+    ports:
+      - "127.0.0.1:18081:8080"
+
 volumes:
   pgdata:
   gomodules:

@@ -4,16 +4,16 @@ package api
 func (s *Server) CreateRoutes() {
 	s.Router.Handle(
 		"/users",
-		s.Compress(s.HandleGetUsers()),
+		s.EnableCORS(s.Compress(s.HandleGetUsers())),
 	).Methods("GET")
 
 	s.Router.Handle(
 		"/users",
-		s.LimitBody(s.HandleAddUser()),
+		s.EnableCORS(s.LimitBody(s.HandleAddUser())),
 	).Methods("POST")
 
 	s.Router.Handle(
 		"/users/{id}",
-		s.HandleGetUser(),
+		s.EnableCORS(s.HandleGetUser()),
 	).Methods("GET")
 }

@@ -54,8 +54,12 @@ migrate: ## Run "up" database migrations
 	docker-compose run migrate sh -c 'migrate -verbose -path=/migrations -database="postgres://@" up'
 
 .PHONY: openapi_validate
-openapi_validate:
+openapi_validate: ## Validate the OpenAPI specification file
 	@docker run -v "${PWD}/cmd/rest/spec/openapi.yaml:/openapi.yaml" --rm p1c2u/openapi-spec-validator /openapi.yaml
+
+.PHONY: openapi_editor
+openapi_editor: ## Start the Swagger Editor
+	docker-compose up -d openapi_editor
 
 .PHONY: logs
 logs: ## Watch the logs of all containers

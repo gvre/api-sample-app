@@ -12,6 +12,8 @@
 - `make app` Build application container
 - `make app_debug` Build application and debugger container
 - `make clean` Remove any existing containers and volumes of the application.
+- `make openapi_validate`  Validate the OpenAPI specification file
+- `make openapi_editor` Start the Swagger Editor (http://localhost:18081/)
 
 ## API endpoints
 - `curl http://localhost:18080/users` Return all users
