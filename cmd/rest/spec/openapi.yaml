@@ -7,6 +7,22 @@ servers:
     description: Development Server
 
 paths:
+  "/-/live":
+    get:
+      responses:
+        "200":
+          description: Check if the service is up
+
+  "/-/health":
+    get:
+      responses:
+        "200":
+          description: Check if the service and its core dependencies are healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+
   "/users":
     get:
       responses:
@@ -149,6 +165,56 @@ components:
             message:
               type: string
 
+    Health:
+      type: object
+      properties:
+        datetime:
+          type: string
+          example: "2020-01-02T03:04:05Z"
+        status:
+          type: string
+          example: ok
+          enum:
+            - ok
+            - warning
+            - error
+        hostname:
+          type: string
+        checks:
+          type: array
+          items:
+            $ref: "#/components/schemas/HealthCheck"
+
+    HealthCheck:
+      type: object
+      properties:
+        name:
+          type: string
+          example: internal_api
+        status:
+          type: string
+          example: ok
+          enum:
+            - ok
+            - warning
+            - error
+        core:
+          type: boolean
+          description: True if the checked service is a core dependency
+        latency_ms:
+          type: integer
+          description: Latency in milliseconds (int64)
+          example: 10
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Error or warning message, empty on success.
+            code:
+              type: integer
+              description: Remote HTTP call response code. Empty if the check is not HTTP related.
+              example: 200
     User:
       type: object
       properties:
@@ -157,4 +223,4 @@ components:
           example: 1
         name:
           type: string
-          example: "John Doe"
+          example: John Doe
