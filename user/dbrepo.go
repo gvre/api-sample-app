@@ -21,6 +21,13 @@ func NewDatabaseRepository(db *pgxpool.Pool) *DatabaseRepository {
 	}
 }
 
+// Ping checks if database is up.
+func (repo *DatabaseRepository) Ping(ctx context.Context) error {
+	_, err := repo.db.Query(ctx, "SELECT 1")
+
+	return err
+}
+
 // FetchAll returns all users.
 func (repo *DatabaseRepository) FetchAll(ctx context.Context) ([]app.User, error) {
 	users := []app.User{}

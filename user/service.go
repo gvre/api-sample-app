@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"time"
 
 	multierror "github.com/hashicorp/go-multierror"
 
@@ -16,6 +17,27 @@ type Service struct {
 // NewService returns a new Service.
 func NewService(repo app.UserRepository) *Service {
 	return &Service{repo: repo}
+}
+
+// Health returns health check information.
+func (s *Service) Health(ctx context.Context) app.Health {
+	start := time.Now()
+
+	h := app.Health{
+		Name: "db",
+		Status: app.HealthStatusOK,
+		Core: true,
+	}
+
+	if err := s.repo.Ping(ctx); err != nil {
+		h.Status = app.HealthStatusError
+		h.Data.Message = err.Error()
+	}
+
+	end := time.Now()
+	h.LatencyMs = end.Sub(start).Milliseconds()
+
+	return h
 }
 
 // Users returns all application users.
