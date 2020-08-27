@@ -10,6 +10,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.0
 	github.com/jackc/pgx/v4 v4.7.2
 	github.com/lib/pq v1.3.0
+	github.com/prometheus/client_golang v1.7.1
 	go.uber.org/zap v1.14.1
 	google.golang.org/appengine v1.6.5 // indirect
 )

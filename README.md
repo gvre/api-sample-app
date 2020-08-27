@@ -18,6 +18,7 @@
 ## API endpoints
 - `curl http://localhost:18080/-/live` Check if the service is up
 - `curl http://localhost:18080/-/health` Check if the service and its dependencies are up
+- `curl http://localhost:18080/-/metrics` Prometheus metrics
 - `curl http://localhost:18080/users` Return all users
 - `curl http://localhost:18080/users/1` Return the user with ID `1`
 - `curl -H 'Content-type: application/json' http://localhost:18080/users -d '{"name":"new user"}'` Add a new user
