@@ -24,9 +24,9 @@ func (s *Service) Health(ctx context.Context) app.Health {
 	start := time.Now()
 
 	h := app.Health{
-		Name: "db",
+		Name:   "db",
 		Status: app.HealthStatusOK,
-		Core: true,
+		Core:   true,
 	}
 
 	if err := s.repo.Ping(ctx); err != nil {

@@ -2,10 +2,11 @@ package api
 
 import (
 	"context"
-	"github.com/gvre/api-sample-app/app"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/gvre/api-sample-app/app"
 )
 
 // HandleCheckLive is used for checking if the service is up.
@@ -57,15 +58,15 @@ func (s *Server) HandleCheckHealth() http.HandlerFunc {
 
 		hostname, _ := os.Hostname()
 		result := struct {
-			Datetime string `json:"datetime"`
-			Status string `json:"status"`
-			Hostname string `json:"hostname"`
-			Checks []app.Health `json:"checks"`
-		} {
+			Datetime string       `json:"datetime"`
+			Status   string       `json:"status"`
+			Hostname string       `json:"hostname"`
+			Checks   []app.Health `json:"checks"`
+		}{
 			Datetime: time.Now().UTC().Format("2006-01-02T15:04:05Z"),
-			Status: status,
+			Status:   status,
 			Hostname: hostname,
-			Checks: checks,
+			Checks:   checks,
 		}
 
 		Ok(w, result, httpStatus)
