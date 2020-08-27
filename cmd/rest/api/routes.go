@@ -1,5 +1,9 @@
 package api
 
+import (
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+)
+
 // CreateRoutes creates all app routes.
 func (s *Server) CreateRoutes() {
 	s.Router.Handle(
@@ -11,6 +15,11 @@ func (s *Server) CreateRoutes() {
 		"/-/health",
 		s.EnableCORS(s.HandleCheckHealth()),
 	).Methods("GET")
+
+	s.Router.Handle(
+		"/-/metrics",
+		s.EnableCORS(promhttp.Handler()),
+	)
 
 	s.Router.Handle(
 		"/users",
