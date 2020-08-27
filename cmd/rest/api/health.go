@@ -21,7 +21,7 @@ func (s *Server) HandleCheckLive() http.HandlerFunc {
 // HandleCheckHealth is used for checking if the service is healthy.
 func (s *Server) HandleCheckHealth() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger := s.Logger.With(actionKey, "check_ready")
+		logger := s.Logger.With(actionKey, "check_health")
 
 		ctx, cancel := context.WithTimeout(r.Context(), handlerDefaultTimeout)
 		defer cancel()
