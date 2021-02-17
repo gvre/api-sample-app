@@ -38,17 +38,24 @@ func (repo *DatabaseRepository) FetchAll(ctx context.Context) ([]app.User, error
 			fmt.Errorf("query: %w", err),
 		)
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		var u app.User
 		if err := rows.Scan(&u.ID, &u.Name); err != nil {
 			return nil, app.NewError(
-				"Error while reading users",
+				"Error while reading user",
 				fmt.Errorf("scan: %w", err),
 			)
 		}
 
 		users = append(users, u)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, app.NewError(
+			"Error while reading users",
+			fmt.Errorf("err: %w", err),
+		)
 	}
 
 	return users, nil
