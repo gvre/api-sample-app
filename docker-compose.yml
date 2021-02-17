@@ -2,7 +2,7 @@ version: "3.1"
 services:
   db:
     hostname: db
-    image: postgres:12-alpine
+    image: postgres:13-alpine
     volumes:
       - pgdata:/pgdata
     environment:
@@ -43,7 +43,7 @@ services:
       - db
 
   test:
-    image: golang:1.14-buster # -race flag need glibc (see https://github.com/golang/go/issues/14481)
+    image: golang:1.16-buster # -race flag need glibc (see https://github.com/golang/go/issues/14481)
     working_dir: /app
     volumes:
       - .:/app

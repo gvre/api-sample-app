@@ -2,7 +2,7 @@
 # See https://docs.docker.com/develop/develop-images/multistage-build/ for details
 
 # builder
-FROM golang:1.14-alpine AS builder
+FROM golang:1.16-alpine AS builder
 
 # Copy go.mod and go.sum separately from the rest of the code,
 # so their cached layer is not invalidated when the code changes.
