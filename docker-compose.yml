@@ -1,8 +1,8 @@
-version: "3.1"
+version: "3.7"
 services:
   db:
     hostname: db
-    image: postgres:13-alpine
+    image: postgres:14-alpine
     volumes:
       - pgdata:/pgdata
     environment:
@@ -14,6 +14,7 @@ services:
       - "127.0.0.1:${PGPORT}:5432"
 
   app:
+    container_name: api-rest-app
     hostname: app
     build: .
     volumes:
@@ -21,12 +22,15 @@ services:
       - gomodules:/go/pkg/mod
     env_file:
       - .env
+    environment:
+      - DOCKER_BUILDKIT=1
     ports:
       - "127.0.0.1:${APP_PORT}:8080"
     depends_on:
       - db
 
   debug:
+    container_name: api-rest-app-debug
     hostname: debug
     build:
       context: .
@@ -36,6 +40,8 @@ services:
       - gomodules:/go/pkg/mod
     env_file:
       - .env
+    environment:
+      - DOCKER_BUILDKIT=1
     ports:
       - "127.0.0.1:${APP_PORT}:8080"
       - "127.0.0.1:${APP_DEBUG_PORT}:40000"
@@ -43,22 +49,31 @@ services:
       - db
 
   test:
-    image: golang:1.16-buster # -race flag need glibc (see https://github.com/golang/go/issues/14481)
+    container_name: api-rest-app-test
+    build:
+      context: .
+      target: tester
+    image: api-sample-app:test
     working_dir: /app
     volumes:
       - .:/app
       - gomodules:/go/pkg/mod
     env_file:
       - .env
+    environment:
+      - DOCKER_BUILDKIT=1
     depends_on:
       - db
 
   migrate:
-    build: ./docker/migrate
+    image: migrate/migrate:4
+    command: -verbose -path=/migrations -database="postgres://@?sslmode=disable" up
     volumes:
       - ./migrations:/migrations
     env_file:
       - .env
+    environment:
+      - DOCKER_BUILDKIT=1
     depends_on:
       - db
 

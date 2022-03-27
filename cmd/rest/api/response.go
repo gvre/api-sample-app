@@ -24,7 +24,7 @@ func Ok(w http.ResponseWriter, response interface{}, httpStatus int) {
 	// to "\u003c","\u003e", "\u0026", "\u2028", and "\u2029".
 	// This replacement can be disabled when using an Encoder,
 	// by calling SetEscapeHTML(false).
-	// See https://github.com/golang/go/blob/release-branch.go1.14/src/encoding/json/encode.go#L46
+	// See https://github.com/golang/go/blob/release-branch.go1.18/src/encoding/json/encode.go#L46
 	buf := new(bytes.Buffer)
 	if response != nil {
 		enc := json.NewEncoder(buf)

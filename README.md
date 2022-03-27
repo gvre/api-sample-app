@@ -11,7 +11,7 @@
 - `make stop` Stop all containers
 - `make app` Build application container
 - `make app_debug` Build application and debugger container
-- `make clean` Remove any existing containers and volumes of the application.
+- `make clean` Remove any existing containers and volumes of the application
 - `make openapi_validate`  Validate the OpenAPI specification file
 - `make openapi_editor` Start the Swagger Editor (http://localhost:18081/)
 

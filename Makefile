@@ -41,7 +41,7 @@ app_debug: ## Build application and debugger container
 
 .PHONY: test
 test: ## Test the application. Use the TAGS argument to pass specific tags (e.g. make TAGS=api test)
-	docker-compose run test sh -c 'CGO_ENABLED=1 go test -race -count=1 $(COVERAGE) -tags $(TAGS) ./...'
+	docker-compose run test sh -c 'CGO_ENABLED=1 go test -buildvcs=false -race -count=1 $(COVERAGE) -tags $(TAGS) ./...'
 
 .PHONY: coverage
 coverage: COVERAGE = -coverprofile=coverage.out
@@ -50,8 +50,8 @@ coverage: test ## Run tests and display coverage
 
 .PHONY: migrate
 migrate: ## Run "up" database migrations
-	sleep 5
-	docker-compose run migrate sh -c 'migrate -verbose -path=/migrations -database="postgres://@" up'
+	$(call wait_for_db)
+	docker-compose run migrate
 
 .PHONY: openapi_validate
 openapi_validate: ## Validate the OpenAPI specification file
@@ -69,3 +69,12 @@ logs: ## Watch the logs of all containers
 clean:  ## Remove all containers and volumes of the app
 	docker-compose rm --stop --force
 	docker volume rm api-sample-app_pgdata &>/dev/null || exit 0
+
+define wait_for_db
+        for i in {1..30}; do \
+                if docker run -t postgres:14-alpine pg_isready -h $${DB_HOST:-host.docker.internal} -p $${PGPORT:-5432}; then \
+                  break; \
+                fi; \
+				sleep 1; \
+        done
+endef
