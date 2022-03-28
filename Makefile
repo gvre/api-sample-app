@@ -71,10 +71,10 @@ clean:  ## Remove all containers and volumes of the app
 	docker volume rm api-sample-app_pgdata &>/dev/null || exit 0
 
 define wait_for_db
-        for i in {1..30}; do \
-                if docker run -t postgres:14-alpine pg_isready -h $${DB_HOST:-host.docker.internal} -p $${PGPORT:-5432}; then \
-                  break; \
-                fi; \
-				sleep 1; \
-        done
+	for i in {1..30}; do \
+		if docker run -t postgres:14-alpine pg_isready -h $${DB_HOST:-host.docker.internal} -p $${PGPORT:-5432}; then \
+			break; \
+		fi; \
+		sleep 1; \
+	done
 endef
