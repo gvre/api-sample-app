@@ -7,32 +7,32 @@ import (
 // CreateRoutes creates all app routes.
 func (s *Server) CreateRoutes() {
 	s.Router.Handle(
-		"/-/live",
+		"GET /-/live",
 		s.EnableCORS(s.HandleCheckLive()),
-	).Methods("GET")
+	)
 
 	s.Router.Handle(
-		"/-/health",
+		"GET /-/health",
 		s.EnableCORS(s.HandleCheckHealth()),
-	).Methods("GET")
+	)
 
 	s.Router.Handle(
-		"/-/metrics",
+		"GET /-/metrics",
 		s.EnableCORS(promhttp.Handler()),
 	)
 
 	s.Router.Handle(
-		"/users",
-		s.EnableCORS(s.Compress(s.HandleGetUsers())),
-	).Methods("GET")
+		"GET /users",
+		s.EnableCORS(s.HandleGetUsers()),
+	)
 
 	s.Router.Handle(
-		"/users",
+		"POST /users",
 		s.EnableCORS(s.LimitBody(s.HandleAddUser())),
-	).Methods("POST")
+	)
 
 	s.Router.Handle(
-		"/users/{id}",
+		"GET /users/{id}",
 		s.EnableCORS(s.HandleGetUser()),
-	).Methods("GET")
+	)
 }

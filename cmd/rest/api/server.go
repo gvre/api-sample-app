@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/gorilla/mux"
 	"log/slog"
+	"net/http"
 	"time"
 
 	"github.com/gvre/api-sample-app/user"
@@ -13,7 +13,7 @@ const handlerDefaultTimeout = 5 * time.Second
 
 // The Server is used as a container for the most important dependencies.
 type Server struct {
-	Router      *mux.Router
+	Router      *http.ServeMux
 	UserService *user.Service
 	Logger      *slog.Logger
 }
@@ -21,7 +21,7 @@ type Server struct {
 // NewServer returns a pointer to a new Server.
 func NewServer(userService *user.Service, logger *slog.Logger) *Server {
 	server := &Server{
-		Router:      mux.NewRouter().StrictSlash(true),
+		Router:      http.NewServeMux(),
 		UserService: userService,
 		Logger:      logger,
 	}

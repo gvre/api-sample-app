@@ -5,8 +5,6 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/gorilla/mux"
-
 	"github.com/gvre/api-sample-app/app"
 )
 
@@ -34,12 +32,10 @@ func (s *Server) HandleGetUsers() http.HandlerFunc {
 func (s *Server) HandleGetUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := s.Logger.With(actionKey, "get_user")
-		vars := mux.Vars(r)
-
-		id, err := toInt(vars, "id")
+		id, err := toInt(r.PathValue("id"))
 		if err != nil {
 			logger.With("success", false).Error(err.Error())
-			BadRequestError(w, errors.New("Invalid id"))
+			BadRequestError(w, errors.New("invalid id"))
 			return
 		}
 
