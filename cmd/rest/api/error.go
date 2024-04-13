@@ -10,7 +10,7 @@ func (mr *malformedRequestError) Error() string {
 	return mr.msg
 }
 
-// ApiError defines a the standard error the API returns.
+// ApiError defines the standard error the API returns.
 type ApiError struct {
 	Message string  `json:"message"`
 	Errors  []error `json:"errors,omitempty"`

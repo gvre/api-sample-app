@@ -24,7 +24,7 @@ func (s *Server) HandleGetUsers() http.HandlerFunc {
 			logger.With("success", true).Info("")
 			Ok(w, users, http.StatusOK)
 		default:
-			logger.With("success", false).Error(err)
+			logger.With("success", false).Error(err.Error())
 			ServerError(w, err)
 		}
 	}
@@ -38,7 +38,7 @@ func (s *Server) HandleGetUser() http.HandlerFunc {
 
 		id, err := toInt(vars, "id")
 		if err != nil {
-			logger.With("success", false).Error(err)
+			logger.With("success", false).Error(err.Error())
 			BadRequestError(w, errors.New("Invalid id"))
 			return
 		}
@@ -52,13 +52,13 @@ func (s *Server) HandleGetUser() http.HandlerFunc {
 			logger.With("success", true).Info("")
 			Ok(w, user, http.StatusOK)
 		case app.IsNotFoundError(err):
-			logger.With("success", false).Warn(err)
+			logger.With("success", false).Warn(err.Error())
 			NotFoundError(w, err)
 		case app.IsValidationError(err):
-			logger.With("success", false).Warn(err)
+			logger.With("success", false).Warn(err.Error())
 			ValidationError(w, err)
 		default:
-			logger.With("success", false).Error(err)
+			logger.With("success", false).Error(err.Error())
 			ServerError(w, err)
 		}
 	}
@@ -78,7 +78,7 @@ func (s *Server) HandleAddUser() http.HandlerFunc {
 			// Let the "Error" function handle it, in order to simplify the logic in controllers.
 			// The http status code we pass to "Error" does not matter when a malformedRequestError is returned,
 			// so pass the "httpStatusIgnore" constant to make that clear to the future reader of this code.
-			logger.With("success", false).Error(err)
+			logger.With("success", false).Error(err.Error())
 			Error(w, err, httpStatusIgnore)
 			return
 		}
@@ -97,7 +97,7 @@ func (s *Server) HandleAddUser() http.HandlerFunc {
 			logger.With("success", true).Info("")
 			Ok(w, response, http.StatusCreated)
 		default:
-			logger.With("success", false).Error(err)
+			logger.With("success", false).Error(err.Error())
 			ServerError(w, err)
 		}
 	}

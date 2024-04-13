@@ -10,7 +10,7 @@ paths:
   "/-/live":
     get:
       responses:
-        "200":
+        "204":
           description: Check if the service is up
 
   "/-/health":

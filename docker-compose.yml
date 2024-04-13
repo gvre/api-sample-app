@@ -2,7 +2,7 @@ version: "3.7"
 services:
   db:
     hostname: db
-    image: postgres:14-alpine
+    image: postgres:16-alpine
     volumes:
       - pgdata:/pgdata
     environment:
@@ -12,22 +12,6 @@ services:
       - PGDATA=pgdata
     ports:
       - "127.0.0.1:${PGPORT}:5432"
-
-  app:
-    container_name: api-rest-app
-    hostname: app
-    build: .
-    volumes:
-      - .:/app
-      - gomodules:/go/pkg/mod
-    env_file:
-      - .env
-    environment:
-      - DOCKER_BUILDKIT=1
-    ports:
-      - "127.0.0.1:${APP_PORT}:8080"
-    depends_on:
-      - db
 
   debug:
     container_name: api-rest-app-debug

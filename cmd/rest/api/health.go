@@ -14,7 +14,7 @@ func (s *Server) HandleCheckLive() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger := s.Logger.With(actionKey, "check_live")
 		logger.With("success", true).Info("")
-		Ok(w, nil, http.StatusOK)
+		Ok(w, nil, http.StatusNoContent)
 	}
 }
 

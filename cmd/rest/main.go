@@ -4,7 +4,9 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/joho/godotenv"
 	"log"
+	"log/slog"
 	"net"
 	"net/http"
 	"os"
@@ -14,10 +16,8 @@ import (
 
 	"github.com/jackc/pgx/v4/pgxpool"
 	_ "github.com/lib/pq"
-	"go.uber.org/zap"
 
 	"github.com/gvre/api-sample-app/cmd/rest/api"
-	"github.com/gvre/api-sample-app/logger"
 	"github.com/gvre/api-sample-app/user"
 )
 
@@ -28,6 +28,9 @@ func main() {
 		port = flag.String("port", "8080", "listen port")
 	)
 	flag.Parse()
+
+	// skip errors if .env file is not found
+	_ = godotenv.Load()
 
 	// Database
 	db, err := pgxpool.Connect(context.Background(), "postgres://")
@@ -40,12 +43,20 @@ func main() {
 	userService := user.NewService(user.NewDatabaseRepository(db))
 
 	// Logger
-	lg := func() *zap.SugaredLogger {
-		return logger.NewZapSugaredLogger(os.Stdout)
-	}()
+	handlerOptions := slog.HandlerOptions{
+		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
+			if a.Key == "time" {
+				return slog.String("time", time.Now().UTC().Format("2006-01-02T15:04:05.000Z"))
+			}
+			return a
+		},
+	}
+	handler := slog.NewJSONHandler(os.Stdout, &handlerOptions)
+	logger := slog.New(handler)
+	slog.SetDefault(logger)
 
 	// Rest server
-	server := api.NewServer(userService, lg)
+	server := api.NewServer(userService, logger)
 
 	// HTTP server
 	srv := &http.Server{

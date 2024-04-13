@@ -4,7 +4,7 @@
 # See https://docs.docker.com/develop/develop-images/multistage-build/ for details
 
 # base
-FROM golang:1.18-alpine AS golang
+FROM golang:1.22-alpine AS golang
 RUN apk add --update --no-cache alpine-sdk
 
 # Copy go.mod and go.sum separately from the rest of the code,

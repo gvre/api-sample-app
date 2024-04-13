@@ -9,11 +9,10 @@ help: ## Display help. `make start` or `make start_debug` are what you will need
 
 .PHONY: build
 build: ## Build images
-	docker-compose build db app
+	docker-compose build db
 
 .PHONY: start
 start: stop build db migrate ## Start all necessary containers
-	docker-compose up -d app
 
 .PHONY: start_debug
 start_debug: stop build db migrate ##Start a container with a debugger and the application

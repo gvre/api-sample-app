@@ -11,7 +11,9 @@ import (
 
 // See https://www.alexedwards.net/blog/how-to-properly-parse-a-json-request-body
 func unmarshalBody(r *http.Request, dst interface{}) error {
-	defer r.Body.Close()
+	defer func(Body io.ReadCloser) {
+		_ = Body.Close()
+	}(r.Body)
 
 	dec := json.NewDecoder(r.Body)
 	dec.DisallowUnknownFields()

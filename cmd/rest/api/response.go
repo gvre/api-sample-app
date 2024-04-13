@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/gvre/api-sample-app/app"
@@ -41,7 +42,7 @@ func Ok(w http.ResponseWriter, response interface{}, httpStatus int) {
 
 	if buf.Len() > 0 {
 		// Remove the extra newline json.Encoder.Encode() adds.
-		w.Write(bytes.TrimRight(buf.Bytes(), "\n"))
+		_, _ = w.Write(bytes.TrimRight(buf.Bytes(), "\n"))
 	}
 }
 
@@ -63,7 +64,8 @@ func ServerError(w http.ResponseWriter, err error) {
 // Error writes the provided error along with the provided http status.
 func Error(w http.ResponseWriter, err error, httpStatus int) {
 	// Malformed request error.
-	if e, ok := err.(*malformedRequestError); ok {
+	var e *malformedRequestError
+	if errors.As(err, &e) {
 		err = &app.Error{
 			Msg: e.msg,
 			Err: e.err,
@@ -83,15 +85,15 @@ func Error(w http.ResponseWriter, err error, httpStatus int) {
 		},
 	}
 
-	res, e := json.Marshal(apiError)
-	if e != nil {
+	res, merr := json.Marshal(apiError)
+	if merr != nil {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(httpStatus)
-	w.Write(res)
+	_, _ = w.Write(res)
 }
 
 // ValidationError writes the provided error along with a 422 http status.
@@ -113,5 +115,5 @@ func ValidationError(w http.ResponseWriter, err error) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusUnprocessableEntity)
-	w.Write(res)
+	_, _ = w.Write(res)
 }

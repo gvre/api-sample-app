@@ -3,13 +3,13 @@ package api_test
 import (
 	"bytes"
 	"context"
-	"io/ioutil"
+	"github.com/joho/godotenv"
+	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"go.uber.org/zap"
 
 	"github.com/gvre/api-sample-app/cmd/rest/api"
 	"github.com/gvre/api-sample-app/user"
@@ -29,12 +29,22 @@ type testcase struct {
 	expected    interface{} // nil, []byte OR func(t *testing.T, b []byte)
 }
 
+// See https://go-review.googlesource.com/c/go/+/547956
+type nopHandler struct{}
+
+func (nopHandler) Enabled(context.Context, slog.Level) bool  { return false }
+func (nopHandler) Handle(context.Context, slog.Record) error { return nil }
+func (d nopHandler) WithAttrs([]slog.Attr) slog.Handler      { return d }
+func (d nopHandler) WithGroup(string) slog.Handler           { return d }
+
 func init() {
 	// Register an sql driver named "txdb".
 	txdb.Register("txdb", "postgres", "postgres://")
 }
 
 func setup() (*api.Server, *pgxpool.Pool) {
+	_ = godotenv.Load("../../../.env")
+
 	db, err := pgxpool.Connect(context.Background(), "postgres://")
 	if err != nil {
 		panic(err)
@@ -43,10 +53,9 @@ func setup() (*api.Server, *pgxpool.Pool) {
 	// Services
 	userService := user.NewService(user.NewDatabaseRepository(db))
 
-	// Logger
-	// NewNop returns a no-op Logger. It never writes out logs or internal errors,
-	// and it never runs user-defined hooks.
-	logger := zap.NewNop().Sugar()
+	// Skip logging during tests.
+	var handler nopHandler
+	logger := slog.New(handler)
 
 	// Rest server
 	return api.NewServer(userService, logger), db
@@ -73,9 +82,11 @@ func run(t *testing.T, tt []testcase) {
 			rr := httptest.NewRecorder()
 			server.Router.ServeHTTP(rr, req)
 			res := rr.Result()
-			defer res.Body.Close()
+			defer func(Body io.ReadCloser) {
+				_ = Body.Close()
+			}(res.Body)
 
-			body, _ := ioutil.ReadAll(res.Body)
+			body, _ := io.ReadAll(res.Body)
 
 			if res.StatusCode != tc.status {
 				t.Errorf("Expected status %d, got %d. Response: %q", tc.status, res.StatusCode, string(body))

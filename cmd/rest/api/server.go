@@ -1,10 +1,9 @@
 package api
 
 import (
-	"time"
-
 	"github.com/gorilla/mux"
-	"go.uber.org/zap"
+	"log/slog"
+	"time"
 
 	"github.com/gvre/api-sample-app/user"
 )
@@ -16,11 +15,11 @@ const handlerDefaultTimeout = 5 * time.Second
 type Server struct {
 	Router      *mux.Router
 	UserService *user.Service
-	Logger      *zap.SugaredLogger
+	Logger      *slog.Logger
 }
 
 // NewServer returns a pointer to a new Server.
-func NewServer(userService *user.Service, logger *zap.SugaredLogger) *Server {
+func NewServer(userService *user.Service, logger *slog.Logger) *Server {
 	server := &Server{
 		Router:      mux.NewRouter().StrictSlash(true),
 		UserService: userService,
