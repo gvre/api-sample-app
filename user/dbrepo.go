@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/gvre/api-sample-app/app"
-	"github.com/jackc/pgx/v4"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 // DatabaseRepository implements the UserRepository interface.

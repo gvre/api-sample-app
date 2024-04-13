@@ -14,7 +14,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/lib/pq"
 
 	"github.com/gvre/api-sample-app/cmd/rest/api"
@@ -33,7 +33,7 @@ func main() {
 	_ = godotenv.Load()
 
 	// Database
-	db, err := pgxpool.Connect(context.Background(), "postgres://")
+	db, err := pgxpool.New(context.Background(), "postgres://")
 	if err != nil {
 		panic(err)
 	}
