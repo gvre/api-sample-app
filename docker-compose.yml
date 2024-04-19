@@ -1,4 +1,3 @@
-version: "3.7"
 services:
   db:
     hostname: db
@@ -13,42 +12,6 @@ services:
     ports:
       - "127.0.0.1:${PGPORT}:5432"
 
-  debug:
-    container_name: api-rest-app-debug
-    hostname: debug
-    build:
-      context: .
-      dockerfile: Dockerfile.debug
-    volumes:
-      - .:/app
-      - gomodules:/go/pkg/mod
-    env_file:
-      - .env
-    environment:
-      - DOCKER_BUILDKIT=1
-    ports:
-      - "127.0.0.1:${APP_PORT}:8080"
-      - "127.0.0.1:${APP_DEBUG_PORT}:40000"
-    depends_on:
-      - db
-
-  test:
-    container_name: api-rest-app-test
-    build:
-      context: .
-      target: tester
-    image: api-sample-app:test
-    working_dir: /app
-    volumes:
-      - .:/app
-      - gomodules:/go/pkg/mod
-    env_file:
-      - .env
-    environment:
-      - DOCKER_BUILDKIT=1
-    depends_on:
-      - db
-
   migrate:
     image: migrate/migrate:4
     command: -verbose -path=/migrations -database="postgres://@?sslmode=disable" up
@@ -58,6 +21,7 @@ services:
       - .env
     environment:
       - DOCKER_BUILDKIT=1
+      - PGHOST=host.docker.internal
     depends_on:
       - db
 
@@ -72,4 +36,3 @@ services:
 
 volumes:
   pgdata:
-  gomodules:

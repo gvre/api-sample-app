@@ -1,5 +1,11 @@
 .DEFAULT_GOAL := help
 
+# Export variables from .env
+ifneq (,$(wildcard ./.env))
+        include .env
+        export
+endif
+
 TAGS = "api"
 COVERAGE=
 
@@ -14,10 +20,6 @@ build: ## Build images
 .PHONY: start
 start: stop build db migrate ## Start all necessary containers
 
-.PHONY: start_debug
-start_debug: stop build db migrate ##Start a container with a debugger and the application
-	docker-compose up -d debug
-
 .PHONY: stop
 stop: ## Stop all containers
 	docker-compose stop
@@ -26,26 +28,14 @@ stop: ## Stop all containers
 db:
 	docker-compose up -d db
 
-.PHONY: app
-app: ## Build application container
-	docker-compose stop app
-	docker-compose rm --force app
-	docker-compose up -d --build app
-
-.PHONY: app_debug
-app_debug: ## Build application and debugger container
-	docker-compose stop debug
-	docker-compose rm --force debug
-	docker-compose up -d --build debug
-
 .PHONY: test
 test: ## Test the application. Use the TAGS argument to pass specific tags (e.g. make TAGS=api test)
-	docker-compose run test sh -c 'CGO_ENABLED=1 go test -buildvcs=false -race -count=1 $(COVERAGE) -tags $(TAGS) ./...'
+	CGO_ENABLED=1 go test -buildvcs=false -race -count=1 $(COVERAGE) -tags $(TAGS) ./...
 
 .PHONY: coverage
 coverage: COVERAGE = -coverprofile=coverage.out
 coverage: test ## Run tests and display coverage
-	docker-compose run test sh -c 'go tool cover -func=coverage.out'
+	go tool cover -func=coverage.out
 
 .PHONY: migrate
 migrate: ## Run "up" database migrations
@@ -71,7 +61,7 @@ clean:  ## Remove all containers and volumes of the app
 
 define wait_for_db
 	for i in {1..30}; do \
-		if docker run -t postgres:14-alpine pg_isready -h $${DB_HOST:-host.docker.internal} -p $${PGPORT:-5432}; then \
+		if docker run -t postgres:16-alpine pg_isready -h $${DB_HOST:-host.docker.internal} -p $${PGPORT:-5432}; then \
 			break; \
 		fi; \
 		sleep 1; \
