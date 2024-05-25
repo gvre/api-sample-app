@@ -3,7 +3,7 @@ package api_test
 import (
 	"bytes"
 	"context"
-	"github.com/joho/godotenv"
+	_ "database/sql"
 	"io"
 	"log/slog"
 	"net/http"
@@ -11,12 +11,13 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/joho/godotenv"
+
 	"github.com/gvre/api-sample-app/cmd/rest/api"
 	"github.com/gvre/api-sample-app/user"
 
 	"github.com/DATA-DOG/go-txdb"
 	"github.com/jackc/pgx/v5/pgxpool"
-	_ "github.com/lib/pq"
 )
 
 type testcase struct {

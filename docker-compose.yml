@@ -13,10 +13,13 @@ services:
       - "127.0.0.1:${PGPORT}:5432"
 
   migrate:
-    image: migrate/migrate:4
-    command: -verbose -path=/migrations -database="postgres://@?sslmode=disable" up
+    build:
+      context: .
+      target: migrations
+    image: api-sample-app:migrations
     volumes:
       - ./migrations:/migrations
+      - ./testdata/migrations:/testdata/migrations
     env_file:
       - .env
     environment:

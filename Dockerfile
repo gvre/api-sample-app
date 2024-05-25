@@ -3,7 +3,8 @@
 # Multi-stage build
 # See https://docs.docker.com/develop/develop-images/multistage-build/ for details
 
-# base
+# Image aliases
+FROM flyway/flyway:10-alpine as flyway
 FROM golang:1.22-alpine AS golang
 RUN apk add --update --no-cache alpine-sdk
 
@@ -15,15 +16,19 @@ RUN go mod download
 COPY . /app
 WORKDIR /app/cmd/rest
 
-# builder
+# Builder
 FROM golang AS builder
 RUN --mount=type=cache,target=/root/.cache/go-build \
     CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -trimpath -o /rest -ldflags '-extldflags "-static" -s -w' .
 
-# tester
+# Tester
 FROM golang AS tester
 
-# app
+# Migrations
+FROM flyway AS migrations
+COPY ./migrations /migrations
+
+# App
 FROM alpine:latest
 
 ENV PGHOST $PGHOST

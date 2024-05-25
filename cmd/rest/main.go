@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
+	_ "database/sql"
 	"flag"
 	"fmt"
-	"github.com/joho/godotenv"
 	"log"
 	"log/slog"
 	"net"
@@ -14,8 +14,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/joho/godotenv"
+
 	"github.com/jackc/pgx/v5/pgxpool"
-	_ "github.com/lib/pq"
 
 	"github.com/gvre/api-sample-app/cmd/rest/api"
 	"github.com/gvre/api-sample-app/user"
