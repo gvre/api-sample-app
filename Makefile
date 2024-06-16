@@ -1,4 +1,5 @@
 .DEFAULT_GOAL := help
+GOMODCACHE := $(HOME)/go/pkg/mod
 
 # Export variables from .env
 ifneq (,$(wildcard ./.env))
@@ -13,19 +14,19 @@ COVERAGE=
 help: ## Display help. `make start` or `make start_debug` are what you will need most of the times. Use the `clean` target to remove any existing containers and volumes.
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n\nTargets:\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
 
-.PHONY: build
-build: ## Build images
-	docker-compose build db
+.PHONY: run
+run: ## Run the API
+	go run cmd/rest/main.go
 
 .PHONY: start
-start: stop build db migrate ## Start all necessary containers
+start: stop db migrate ## Start all necessary containers
 
 .PHONY: stop
 stop: ## Stop all containers
 	docker-compose stop
 
 .PHONY: db
-db:
+db: ## Start the database container
 	docker-compose up -d db
 
 .PHONY: test
