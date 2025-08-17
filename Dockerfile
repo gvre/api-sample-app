@@ -5,7 +5,7 @@
 
 # Image aliases
 FROM flyway/flyway:10-alpine as flyway
-FROM golang:1.22-alpine AS golang
+FROM golang:1.25-alpine AS golang
 RUN apk add --update --no-cache alpine-sdk
 
 # Copy go.mod and go.sum separately from the rest of the code,
